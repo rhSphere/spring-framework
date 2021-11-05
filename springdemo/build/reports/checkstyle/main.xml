@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.22">
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/Entrance.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/ResolvableDemo.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/controller/WelcomeController.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/dao/WelcomeDao.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/dao/impl/WelcomeDaoImpl.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/demo/resource/ResourceDemo.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/entity/User.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/entity/factory/StaticFactory.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/entity/factory/UserFactory.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/entity/factory/UserFactoryBean.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/postprocessor/CustomizedBeanDefinitionRegistryPostProcessor.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/postprocessor/CustomizedBeanPostProcessor.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/service/WelcomeService.java">
+</file>
+<file name="/Users/bytedance/study/imooc/springframework/spring-framework-5.2/springdemo/src/main/java/com/imooc/service/impl/WelcomeServiceImpl.java">
+</file>
+</checkstyle>
