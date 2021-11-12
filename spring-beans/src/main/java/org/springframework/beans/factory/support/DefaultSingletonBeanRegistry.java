@@ -75,18 +75,45 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 
 	/** Cache of singleton objects: bean name to bean instance. */
+	/**
+	 * 一级缓存
+	 * k：beanName
+	 * v：bean对象
+	 * 已经是一个完整的bean对象，可以拿去直接用
+	 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
 	/** Cache of singleton factories: bean name to ObjectFactory. */
+	/**
+	 * 三级缓存
+	 * k：beanName
+	 * v：bean的工厂对象那个（lambda），用这个工厂可以生成这个bean
+	 * 单例工厂的缓存
+	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/** Cache of early singleton objects: bean name to bean instance. */
+	/**
+	 * 二级缓存
+	 * k：beanName
+	 * v：bean对象
+	 * 早期的单例对象的高速缓存，还未完全化
+	 * 还有部分属性没有填充
+	 * 也可以理解用无参构造器创建了bean，还没有调用set方法给bean哥哥属性赋值
+	 */
 	private final Map<String, Object> earlySingletonObjects = new ConcurrentHashMap<>(16);
 
 	/** Set of registered singletons, containing the bean names in registration order. */
+	/**
+	 * 已经完成注册的beanName集
+	 * 所有放入一级缓存的beanName
+	 */
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
 	/** Names of beans that are currently in creation. */
+	/**
+	 * 正在创建中的单例
+	 */
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
 
@@ -165,6 +192,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	@Override
 	@Nullable
 	public Object getSingleton(String beanName) {
+		// 获取单例实例
+		// 允许立即加载
 		return getSingleton(beanName, true);
 	}
 
@@ -178,21 +207,36 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-		// Quick check for existing instance without full singleton lock
+		// 三级缓存，解决循环依赖
+		// 尝试从一级缓存获取完备的bean
 		Object singletonObject = this.singletonObjects.get(beanName);
+
+		// 如果完备的单例还没创建出来，创建中的bean的名字会被保存在SingletonCurrentlyInCreation
+		// 因此看看是否正在创建
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			// 尝试从二级缓存earlySingletonObjects这个存储还没进行属性添加操作的bean实例缓存中获取
 			singletonObject = this.earlySingletonObjects.get(beanName);
+			// 如果还没有获取到并且允许早期引用，第二个参数为true，表示bean允许被循环引用
 			if (singletonObject == null && allowEarlyReference) {
+				// 尝试给一级缓存对象加锁，因为接下来就要对缓存对象操作
 				synchronized (this.singletonObjects) {
 					// Consistent creation of early reference within full singleton lock
+					// 再次从一级缓存中获取
 					singletonObject = this.singletonObjects.get(beanName);
 					if (singletonObject == null) {
+						// 再次从二级缓存中获取
 						singletonObject = this.earlySingletonObjects.get(beanName);
 						if (singletonObject == null) {
+							// 从三级缓存中获取bean的单例工厂
 							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 							if (singletonFactory != null) {
+								// 获取到了bean的单例工厂，升级为二级缓存
+
+								// 从三级缓存bean工厂获取bean
 								singletonObject = singletonFactory.getObject();
+								// 放入二级缓存
 								this.earlySingletonObjects.put(beanName, singletonObject);
+								// 从三级缓存中移除，已经升到了二级
 								this.singletonFactories.remove(beanName);
 							}
 						}
@@ -341,6 +385,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param beanName the name of the bean
 	 */
 	public boolean isSingletonCurrentlyInCreation(String beanName) {
+		// set包含正在创建中的beanName
 		return this.singletonsCurrentlyInCreation.contains(beanName);
 	}
 
